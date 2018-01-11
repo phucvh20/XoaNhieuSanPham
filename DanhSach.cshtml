@@ -1,0 +1,178 @@
+﻿@using PagedList.Mvc;
+@model PagedList.IPagedList<QuanLySachDatabaseFirst.DataContext.SanPham>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutTheme.cshtml";
+}
+
+
+<div class="widget-box create-sanpham-toggle">
+    <div class="widget-title">
+        <h5>Thêm Nhanh Sản Phẩm</h5>
+    </div>
+    <div class="widget-content nopadding" style="display: none">
+        <form action="" id="formCreateNewProduct" method="get" class="form-horizontal">
+            <div class="control-group">
+                <label class="control-label">Tên sản phẩm :</label>
+                <div class="controls">
+                    <input type="text" class="span11" placeholder="First name" name="tenSanPham" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Giá sản phẩm :</label>
+                <div class="controls">
+                    <input type="text" class="span11" placeholder="Last name" name="giaSanPham" />
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-success">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+    </div>
+</div>
+
+
+<div class="widget-box">
+    <div class="widget-title">
+        <span class="icon"><i class="icon-th"></i></span>
+        <h5>@Html.ActionLink("Create New", "Create")</h5>
+    </div>
+    <div class="widget-content nopadding">
+        <a href="" class="js-delete-multiple-product">Xoa San Pham Da Chon</a>
+        <table class="table table-bordered data-table">
+            <thead>
+                <tr>
+                    <th>
+                        <input type="checkbox" name="chkAll" />
+                    </th>
+                    <th>
+                        Tên Sản phẩm
+                    </th>
+                    <th>
+                        Giá mua
+                    </th>
+                    <th>
+                        Giá bán
+                    </th>
+                    <th>
+                        Loại sản phẩm
+                    </th>
+                    <th>
+                        Chủ đề
+                    </th>
+                    <th>
+                        Thông tin
+                    </th>
+                    <th>
+                        Giới tính
+                    </th>
+                    <th>
+                        Ngày nhập
+                    </th>
+                    <th>
+                        Hình
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+            {
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="chkProduct" value="@item.MaSP" />
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TenSP)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.GiaMua)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.GiaBan)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LoaiSanPham.Ten)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ChuDe)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ThongTin)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.GioiTinh)
+                        </td>
+                        <td>
+                            @if (item.NgayNhapHang != null)
+                            {
+                                @item.NgayNhapHang.Value.ToString("dd/MM/yyyy")
+                            }
+                        </td>
+                        <td>
+                            <img src="/Images/Smalls/@item.HinhAnh" alt="Alternate Text" />
+                        </td>
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", new { id = item.MaSP }) |
+                            @Html.ActionLink("Details", "Details", new { id = item.MaSP }) |
+                            @*@Html.ActionLink("Delete", "Delete", new { id=item.MaSP })*@
+                            <a href="#" class="js-delete-product" data-product-id="@item.MaSP">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+        <br />
+
+        Trang @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) của @Model.PageCount
+
+        @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        BinhLuansController.init();
+        sanPhamsController.deleteProduct.init();
+        sanPhamsController.addProduct.init();
+        sanPhamsController.toggleAddProduct.init();
+        sanPhamsController.deleteProductMultiple.init();
+
+        //khai bao dang ky mot su kien cho thanh phan html
+        //su dung thu vien jquery de lam viec
+        //$(".js-delete-product").click(function(e) {
+        //    var link = $(e.target);
+        //    //debug: in ra hoac dung chuong trinh tai buoc nay de kiem tra ket qua
+        //    //Chu y: phai xoa khi len production
+        //    //debugger;
+        //    //console.log(link.attr("data-product-id"));
+        //    var confirmDeleteProduct = confirm("Ban co chac xoa khong?");
+        //    if (confirmDeleteProduct)
+        //    {
+        //        //goi API xoa san pham
+        //        $.ajax({
+        //            url: "/api/SanPhams/" + link.attr("data-product-id"),
+        //            type: "DELETE",
+        //            success: function () {
+        //                alert("Xoa Thanh Cong!");
+        //                //tu dong thay doi bat dong bo HTML
+        //                link.parents("tr").fadeOut(function() {
+        //                    $(this).remove();
+        //                });
+        //            },
+        //            error: function() {
+        //                alert("Xoa That Bai!");
+        //            }
+        //        });
+        //    }
+        //});
+    </script>
+
+}
